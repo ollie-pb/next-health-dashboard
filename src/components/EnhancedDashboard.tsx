@@ -138,8 +138,8 @@ export const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ scores, on
 
   return (
     <DashboardLayout
-      title="Personal Health Dashboard"
-      subtitle="Your comprehensive wellness overview"
+      title="Health Optimization Dashboard"
+      subtitle="Next Health - Personalized Longevity & Performance"
       headerIcon="heart"
       breadcrumbs={breadcrumbs}
       sidebarItems={sidebarItems}

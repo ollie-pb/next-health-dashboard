@@ -2,11 +2,12 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn';
 import { Typography } from '../../atoms/Typography';
 import { Icon, type IconName } from '../../atoms/Icon';
+import { Logo } from '../../atoms/Logo';
 import { Navigation, type NavigationItem } from '../../molecules/Navigation';
 import { forwardRef, type ReactNode } from 'react';
 
 const dashboardLayoutVariants = cva(
-  'min-h-screen bg-gradient-to-br from-neutral-50 to-neutral-100',
+  'min-h-screen bg-gradient-to-br from-neutral-50 to-primary-50',
   {
     variants: {
       variant: {
@@ -95,6 +96,7 @@ interface DashboardLayoutProps extends VariantProps<typeof dashboardLayoutVarian
   title?: string;
   subtitle?: string;
   headerIcon?: IconName;
+  showLogo?: boolean;
   breadcrumbs?: NavigationItem[];
   headerActions?: ReactNode;
   headerVariant?: VariantProps<typeof headerVariants>['variant'];
@@ -123,6 +125,7 @@ const DashboardLayout = forwardRef<HTMLDivElement, DashboardLayoutProps>(
     title,
     subtitle,
     headerIcon,
+    showLogo = true,
     breadcrumbs,
     headerActions,
     headerVariant = 'default',
@@ -207,7 +210,7 @@ const DashboardLayout = forwardRef<HTMLDivElement, DashboardLayoutProps>(
         {/* Main Content Area */}
         <div className="flex min-h-screen flex-col">
           {/* Header */}
-          {(title || breadcrumbs || headerActions) && (
+          {(showLogo || title || breadcrumbs || headerActions) && (
             <header className={cn(headerVariants({ variant: headerVariant }))}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4 min-w-0 flex-1">
@@ -220,6 +223,13 @@ const DashboardLayout = forwardRef<HTMLDivElement, DashboardLayoutProps>(
                     >
                       <Icon name="menu" size="md" />
                     </button>
+                  )}
+                  
+                  {/* Logo */}
+                  {showLogo && (
+                    <div className="flex items-center">
+                      <Logo variant="full" size="lg" />
+                    </div>
                   )}
                   
                   <div className="min-w-0 flex-1">

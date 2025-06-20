@@ -15,3 +15,6 @@ export type { BadgeProps } from './Badge';
 
 export { Loading, loadingVariants } from './Loading';
 export type { LoadingProps } from './Loading';
+
+export { Logo } from './Logo';
+export type { LogoProps } from './Logo';

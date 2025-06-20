@@ -9,29 +9,46 @@ export default {
     extend: {
       // Next Health Brand Colors
       colors: {
+        // Next Health Primary Navy
         primary: {
-          50: '#f0f4f8',
-          100: '#d9e6f2', 
-          200: '#b8d0e8',
-          300: '#91b4db',
-          400: '#6b94cc',
-          500: '#4a74b8',
-          600: '#3d5a94',
-          700: '#314570',
-          800: '#25324c',
-          900: '#1a1f28',
+          50: '#f8fafc',
+          100: '#f1f5f9',
+          200: '#e2e8f0',
+          300: '#cbd5e1',
+          400: '#94a3b8',
+          500: '#64748b',
+          600: '#475569',
+          700: '#334155', // Next Health Navy
+          800: '#1e293b',
+          900: '#0f172a',
+          950: '#020617',
+        },
+        // Medical/Brand Navy
+        brand: {
+          50: '#f8fafc',
+          100: '#f1f5f9',
+          200: '#e2e8f0',
+          300: '#cbd5e1',
+          400: '#94a3b8',
+          500: '#64748b',
+          600: '#475569',
+          700: '#334155', // Primary Next Health Navy
+          800: '#1e293b',
+          900: '#0f172a',
+          950: '#020617',
         },
         neutral: {
-          50: '#fafbfc',
-          100: '#f4f6f8',
-          200: '#e8ecf0',
-          300: '#d0d8e0',
-          400: '#a8b8c8',
-          500: '#7d8ba0',
-          600: '#5a6578',
-          700: '#3f4954',
-          800: '#2b3138',
-          900: '#1a1d21',
+          50: '#fafafa',
+          100: '#f5f5f5',
+          200: '#e5e5e5',
+          300: '#d4d4d4',
+          400: '#a3a3a3',
+          500: '#737373',
+          600: '#525252',
+          700: '#404040',
+          800: '#262626',
+          900: '#171717',
+          950: '#0a0a0a',
         },
         optimal: {
           50: '#f0fdf4',
@@ -53,12 +70,12 @@ export default {
           500: '#ef4444',
           600: '#dc2626',
         },
-        // Legacy support
-        'primary-navy': '#314570',
-        'primary-blue': '#4a74b8',
-        'primary-light': '#f4f6f8',
-        'status-optimal': '#10b981',
-        'status-good': '#59c96a',
+        // Legacy support - updated to Next Health colors
+        'primary-navy': '#334155',
+        'primary-blue': '#475569',
+        'primary-light': '#f1f5f9',
+        'status-optimal': '#22c55e',
+        'status-good': '#0ea5e9',
         'status-attention': '#f59e0b',
         'status-concern': '#ef4444',
       },
@@ -67,6 +84,7 @@ export default {
       fontFamily: {
         primary: ['"Montserrat"', 'system-ui', 'sans-serif'],
         secondary: ['"Libre Baskerville"', 'Georgia', 'serif'],
+        accent: ['"Baskervville"', 'Georgia', 'serif'], // Next Health accent font
         mono: ['"SF Mono"', '"Monaco"', 'monospace'],
         // Legacy support
         display: ['"Montserrat"', 'system-ui', 'sans-serif'],
