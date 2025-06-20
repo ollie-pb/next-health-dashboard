@@ -13,6 +13,7 @@ export interface Component {
   name: string;
   value: number; // 0-100
   completionRate: number; // 0-1 (percentage of biomarkers available)
+  trend?: number; // percentage change
   biomarkers: Biomarker[];
 }
 
@@ -25,8 +26,10 @@ export interface Biomarker {
     min: number;
     max: number;
   };
-  trend: number; // percentage change
+  trend?: number; // percentage change
   lastUpdate: string;
+  category?: string; // biomarker category
+  description?: string; // biomarker description
   dataPoints?: Array<{
     date: string;
     value: number;

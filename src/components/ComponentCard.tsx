@@ -14,7 +14,7 @@ export const ComponentCard: React.FC<ComponentCardProps> = ({ component, onClick
 
   // Calculate average trend from biomarkers
   const avgTrend = component.biomarkers.length > 0 
-    ? component.biomarkers.reduce((sum, b) => sum + b.trend, 0) / component.biomarkers.length
+    ? component.biomarkers.reduce((sum, b) => sum + (b.trend || 0), 0) / component.biomarkers.length
     : 0;
 
   const trendIcon = getTrendIcon(avgTrend);

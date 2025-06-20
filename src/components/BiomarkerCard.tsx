@@ -9,8 +9,8 @@ interface BiomarkerCardProps {
 }
 
 export const BiomarkerCard: React.FC<BiomarkerCardProps> = ({ biomarker }) => {
-  const trendIcon = getTrendIcon(biomarker.trend);
-  const trendFormatted = formatTrend(biomarker.trend);
+  const trendIcon = getTrendIcon(biomarker.trend || 0);
+  const trendFormatted = formatTrend(biomarker.trend || 0);
 
   // Calculate position within reference range (0-1)
   const rangeSize = biomarker.referenceRange.max - biomarker.referenceRange.min;
@@ -89,9 +89,9 @@ export const BiomarkerCard: React.FC<BiomarkerCardProps> = ({ biomarker }) => {
         <div className="flex items-center gap-3">
           <span 
             className={`text-sm font-medium ${
-              biomarker.trend > 0 
+              (biomarker.trend || 0) > 0 
                 ? 'text-status-optimal' 
-                : biomarker.trend < 0 
+                : (biomarker.trend || 0) < 0 
                   ? 'text-status-concern' 
                   : 'text-gray-500'
             }`}

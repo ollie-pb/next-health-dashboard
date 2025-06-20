@@ -31,6 +31,7 @@ const badgeVariants = cva(
         filled: 'bg-neutral-900 text-white hover:bg-neutral-800',
       },
       size: {
+        xs: 'px-1.5 py-0.5 text-xs rounded-sm',
         sm: 'px-2 py-0.5 text-xs rounded-md',
         md: 'px-2.5 py-1 text-sm rounded-md',
         lg: 'px-3 py-1.5 text-sm rounded-lg',

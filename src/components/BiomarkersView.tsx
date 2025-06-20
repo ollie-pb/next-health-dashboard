@@ -181,7 +181,7 @@ export const BiomarkersView: React.FC<BiomarkersViewProps> = ({
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-status-optimal">
-                {component.biomarkers.filter(b => b.trend > 0).length}
+                {component.biomarkers.filter(b => (b.trend || 0) > 0).length}
               </div>
               <div className="text-sm text-gray-500">Improving</div>
             </div>

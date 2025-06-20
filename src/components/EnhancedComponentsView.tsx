@@ -93,7 +93,7 @@ export const EnhancedComponentsView: React.FC<EnhancedComponentsViewProps> = ({
       headerActions={
         <div className="flex items-center gap-3">
           <Badge 
-            variant={score.status} 
+            variant={score.status === 'no-data' ? 'outline' : score.status} 
             size="sm"
             className="animate-fade-in"
           >
