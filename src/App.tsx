@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Dashboard } from './components/Dashboard';
+import { EnhancedDashboard } from './components/EnhancedDashboard';
 import { ComponentsView } from './components/ComponentsView';
 import { BiomarkersView } from './components/BiomarkersView';
 import { sampleHealthScores } from './data/sampleData';
@@ -55,7 +56,15 @@ function App() {
     );
   }
 
-  return (
+  // Use enhanced dashboard with micro-interactions
+  const useEnhanced = true; // Toggle this to switch between dashboards
+  
+  return useEnhanced ? (
+    <EnhancedDashboard 
+      scores={sampleHealthScores} 
+      onScoreClick={handleScoreClick}
+    />
+  ) : (
     <Dashboard 
       scores={sampleHealthScores} 
       onScoreClick={handleScoreClick}
