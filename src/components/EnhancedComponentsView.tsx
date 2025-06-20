@@ -4,7 +4,7 @@ import { DashboardLayout } from '../design-system/layouts/DashboardLayout';
 import { Grid, GridItem } from '../design-system/layouts/Grid';
 import { Section } from '../design-system/layouts/Section';
 import { ScoreCard } from '../design-system/molecules/ScoreCard';
-import { Chart } from '../design-system/molecules/Chart';
+import { Chart } from '../design-system/molecules/Chart/Chart';
 import { Typography } from '../design-system/atoms/Typography';
 import { Badge } from '../design-system/atoms/Badge';
 import { Button } from '../design-system/atoms/Button';

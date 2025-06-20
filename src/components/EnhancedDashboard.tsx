@@ -9,7 +9,8 @@ import { Badge } from '../design-system/atoms/Badge';
 import { Button } from '../design-system/atoms/Button';
 import { Icon } from '../design-system/atoms/Icon';
 import { Loading } from '../design-system/atoms/Loading';
-import { Chart } from '../design-system/molecules/Chart';
+import { ChartWrapper } from '../design-system/molecules/Chart/ChartWrapper';
+import { EnhancedComboChart } from '../design-system/molecules/Chart/EnhancedComboChart';
 import { Navigation } from '../design-system/molecules/Navigation';
 import { HealthWheelVisualization } from './HealthWheelVisualization';
 import { AttentionDashboard } from './AttentionDashboard';
@@ -172,7 +173,7 @@ export const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ scores, on
       ) : (
         <div className="space-y-8 animate-fade-in">
           {/* Quick Stats */}
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {[
               { label: 'Optimal', value: stats.optimal, color: 'optimal' as const, icon: 'check' as const },
               { label: 'Good', value: stats.good, color: 'good' as const, icon: 'trendingUp' as const },
@@ -248,35 +249,167 @@ export const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ scores, on
           </Section>
 
 
-          {/* Trend Chart */}
-          <Section
-            title="Overall Health Trend"
-            subtitle={`${timeIntervals.find(t => t.value === selectedTimeInterval)?.label || '6M'} progression`}
-            icon="trendingUp"
-            variant="card"
-            action={
-              <TimeIntervalSelector
-                intervals={timeIntervals}
-                selected={selectedTimeInterval}
-                onChange={setSelectedTimeInterval}
-                size="sm"
+          {/* Main Content Grid - Responsive Layout */}
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+            {/* Left Column - Primary Charts */}
+            <div className="xl:col-span-2 space-y-6">
+              {/* Trend Chart */}
+              <Section
+                title="Overall Health Trend"
+                subtitle={`${timeIntervals.find(t => t.value === selectedTimeInterval)?.label || '6M'} progression`}
+                icon="trendingUp"
+                variant="card"
+                action={
+                  <TimeIntervalSelector
+                    intervals={timeIntervals}
+                    selected={selectedTimeInterval}
+                    onChange={setSelectedTimeInterval}
+                    size="sm"
+                  />
+                }
+              >
+                <ChartWrapper
+                  title="Average Health Score"
+                  data={chartData}
+                  variant="line"
+                  size="lg"
+                  unit=" points"
+                  trend={chartData.length >= 2 ? 
+                    ((chartData[chartData.length - 1].value - chartData[0].value) / chartData[0].value * 100) : 
+                    0
+                  }
+                  showGrid
+                  showLegend
+                  useEnhanced={true}
+                />
+              </Section>
+
+              {/* Multi-Metric Health Analysis */}
+              <Section
+                title="Comprehensive Health Analysis"
+                subtitle="Combined view of key health indicators"
+                icon="activity"
+                variant="card"
+              >
+                <EnhancedComboChart
+                  title="Health Metrics Overview"
+                  subtitle="Tracking multiple health dimensions over time"
+                  data={chartData.map((point, index) => ({
+                    name: point.label,
+                    overall: point.value,
+                    cardiovascular: point.value + Math.sin(index * 0.5) * 10,
+                    metabolic: point.value - Math.cos(index * 0.3) * 8,
+                    inflammation: point.value + Math.sin(index * 0.7) * 5,
+                  }))}
+                  series={[
+                    { dataKey: 'overall', name: 'Overall Health', type: 'area', color: '#3B82F6' },
+                    { dataKey: 'cardiovascular', name: 'Cardiovascular', type: 'line', color: '#EF4444' },
+                    { dataKey: 'metabolic', name: 'Metabolic', type: 'line', color: '#10B981' },
+                    { dataKey: 'inflammation', name: 'Inflammation', type: 'line', color: '#F59E0B' },
+                  ]}
+                  height={350}
+                  unit=" pts"
+                  showGrid
+                  showLegend
+                  referenceValue={80}
+                  trend={chartData.length >= 2 ? 
+                    ((chartData[chartData.length - 1].value - chartData[0].value) / chartData[0].value * 100) : 
+                    0
+                  }
+                />
+              </Section>
+            </div>
+
+            {/* Right Column - Secondary Charts and Metrics */}
+            <div className="space-y-6">
+              <ChartWrapper
+                title="Sleep Quality Trend"
+                data={chartData.map(point => ({
+                  ...point,
+                  value: Math.max(50, Math.min(100, point.value + (Math.random() - 0.5) * 20))
+                }))}
+                variant="area"
+                size="md"
+                unit=" pts"
+                icon="brain"
+                showGrid
+                useEnhanced={true}
               />
-            }
-          >
-            <Chart
-              title="Average Health Score"
-              data={chartData}
+              
+              <ChartWrapper
+                title="Activity Levels"
+                data={chartData.map(point => ({
+                  ...point,
+                  value: Math.max(40, Math.min(100, point.value + (Math.random() - 0.5) * 15))
+                }))}
+                variant="line"
+                size="md"
+                unit=" pts"
+                icon="activity"
+                showGrid
+                useEnhanced={true}
+              />
+            </div>
+          </div>
+
+          {/* Additional Metrics Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+            <ChartWrapper
+              title="Heart Rate Variability"
+              data={chartData.map(point => ({
+                ...point,
+                value: Math.max(30, Math.min(80, point.value * 0.6 + (Math.random() - 0.5) * 10))
+              }))}
               variant="line"
-              size="lg"
-              unit=" points"
-              trend={chartData.length >= 2 ? 
-                ((chartData[chartData.length - 1].value - chartData[0].value) / chartData[0].value * 100) : 
-                0
-              }
+              size="sm"
+              unit=" ms"
+              icon="heart"
               showGrid
-              showLegend
+              useEnhanced={true}
             />
-          </Section>
+            
+            <ChartWrapper
+              title="Stress Index"
+              data={chartData.map(point => ({
+                ...point,
+                value: Math.max(20, Math.min(100, 100 - point.value + (Math.random() - 0.5) * 15))
+              }))}
+              variant="area"
+              size="sm"
+              unit="/100"
+              icon="brain"
+              showGrid
+              useEnhanced={true}
+            />
+
+            <ChartWrapper
+              title="Recovery Score"
+              data={chartData.map(point => ({
+                ...point,
+                value: Math.max(40, Math.min(100, point.value + (Math.random() - 0.5) * 12))
+              }))}
+              variant="line"
+              size="sm"
+              unit="%"
+              icon="refresh"
+              showGrid
+              useEnhanced={true}
+            />
+
+            <ChartWrapper
+              title="Energy Levels"
+              data={chartData.map(point => ({
+                ...point,
+                value: Math.max(50, Math.min(100, point.value + (Math.random() - 0.5) * 18))
+              }))}
+              variant="area"
+              size="sm"
+              unit=" pts"
+              icon="activity"
+              showGrid
+              useEnhanced={true}
+            />
+          </div>
 
           {/* Attention Dashboard */}
           <AttentionDashboard 

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Grid, GridItem } from './Grid';
 import { ScoreCard } from '../../molecules/ScoreCard';
-import { Chart } from '../../molecules/Chart';
+import { Chart } from '../../molecules/Chart/Chart';
 import { Typography } from '../../atoms/Typography';
 
 // Sample data

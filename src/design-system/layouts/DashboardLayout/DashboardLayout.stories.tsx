@@ -3,7 +3,7 @@ import { DashboardLayout } from './DashboardLayout';
 import { Grid, GridItem } from '../Grid';
 import { Section } from '../Section';
 import { ScoreCard } from '../../molecules/ScoreCard';
-import { Chart } from '../../molecules/Chart';
+import { Chart } from '../../molecules/Chart/Chart';
 import { Button } from '../../atoms/Button';
 import { Icon } from '../../atoms/Icon';
 import { Badge } from '../../atoms/Badge';

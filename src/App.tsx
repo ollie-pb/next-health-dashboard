@@ -5,6 +5,7 @@ import { ComponentsView } from './components/ComponentsView';
 import { EnhancedComponentsView } from './components/EnhancedComponentsView';
 import { BiomarkersView } from './components/BiomarkersView';
 import { EnhancedBiomarkersView } from './components/EnhancedBiomarkersView';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { sampleHealthScores } from './data/sampleData';
 import type { HealthScore, Component } from './types';
 
@@ -41,50 +42,62 @@ function App() {
 
   // Render appropriate view
   if (currentView === 'biomarkers' && selectedScore && selectedComponent) {
-    return useEnhanced ? (
-      <EnhancedBiomarkersView
-        score={selectedScore}
-        component={selectedComponent}
-        onBackToComponents={handleBackToComponents}
-        onBackToDashboard={handleBackToDashboard}
-      />
-    ) : (
-      <BiomarkersView
-        score={selectedScore}
-        component={selectedComponent}
-        onBackToComponents={handleBackToComponents}
-        onBackToDashboard={handleBackToDashboard}
-      />
+    return (
+      <ErrorBoundary>
+        {useEnhanced ? (
+          <EnhancedBiomarkersView
+            score={selectedScore}
+            component={selectedComponent}
+            onBackToComponents={handleBackToComponents}
+            onBackToDashboard={handleBackToDashboard}
+          />
+        ) : (
+          <BiomarkersView
+            score={selectedScore}
+            component={selectedComponent}
+            onBackToComponents={handleBackToComponents}
+            onBackToDashboard={handleBackToDashboard}
+          />
+        )}
+      </ErrorBoundary>
     );
   }
 
   if (currentView === 'components' && selectedScore) {
-    return useEnhanced ? (
-      <EnhancedComponentsView
-        score={selectedScore}
-        onComponentClick={handleComponentClick}
-        onBackToDashboard={handleBackToDashboard}
-      />
-    ) : (
-      <ComponentsView
-        score={selectedScore}
-        onComponentClick={handleComponentClick}
-        onBackToDashboard={handleBackToDashboard}
-      />
+    return (
+      <ErrorBoundary>
+        {useEnhanced ? (
+          <EnhancedComponentsView
+            score={selectedScore}
+            onComponentClick={handleComponentClick}
+            onBackToDashboard={handleBackToDashboard}
+          />
+        ) : (
+          <ComponentsView
+            score={selectedScore}
+            onComponentClick={handleComponentClick}
+            onBackToDashboard={handleBackToDashboard}
+          />
+        )}
+      </ErrorBoundary>
     );
   }
   
-  return useEnhanced ? (
-    <EnhancedDashboard 
-      scores={sampleHealthScores} 
-      onScoreClick={handleScoreClick}
-      onComponentClick={handleComponentClick}
-    />
-  ) : (
-    <Dashboard 
-      scores={sampleHealthScores} 
-      onScoreClick={handleScoreClick}
-    />
+  return (
+    <ErrorBoundary>
+      {useEnhanced ? (
+        <EnhancedDashboard 
+          scores={sampleHealthScores} 
+          onScoreClick={handleScoreClick}
+          onComponentClick={handleComponentClick}
+        />
+      ) : (
+        <Dashboard 
+          scores={sampleHealthScores} 
+          onScoreClick={handleScoreClick}
+        />
+      )}
+    </ErrorBoundary>
   );
 }
 

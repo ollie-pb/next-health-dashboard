@@ -4,8 +4,13 @@
 export { ScoreCard, scoreCardVariants } from './ScoreCard';
 export type { ScoreCardProps } from './ScoreCard';
 
-export { Chart, chartVariants } from './Chart';
-export type { ChartProps, DataPoint } from './Chart';
+export { Chart } from './Chart/Chart';
+export { ChartWrapper } from './Chart/ChartWrapper';
+export { EnhancedLineChart } from './Chart/EnhancedLineChart';
+export { EnhancedAreaChart } from './Chart/EnhancedAreaChart';
+export { EnhancedComboChart } from './Chart/EnhancedComboChart';
+export type { ChartProps, DataPoint } from './Chart/Chart';
+export type { ChartWrapperProps } from './Chart/ChartWrapper';
 
 export { Navigation, navigationVariants } from './Navigation';
 export type { NavigationProps, NavigationItem } from './Navigation';
