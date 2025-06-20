@@ -2,7 +2,9 @@ import { useState } from 'react';
 import { Dashboard } from './components/Dashboard';
 import { EnhancedDashboard } from './components/EnhancedDashboard';
 import { ComponentsView } from './components/ComponentsView';
+import { EnhancedComponentsView } from './components/EnhancedComponentsView';
 import { BiomarkersView } from './components/BiomarkersView';
+import { EnhancedBiomarkersView } from './components/EnhancedBiomarkersView';
 import { sampleHealthScores } from './data/sampleData';
 import type { HealthScore, Component } from './types';
 
@@ -34,9 +36,19 @@ function App() {
     setSelectedComponent(null);
   };
 
+  // Use enhanced design system for all views
+  const useEnhanced = true; // Toggle this to switch between old and new design systems
+
   // Render appropriate view
   if (currentView === 'biomarkers' && selectedScore && selectedComponent) {
-    return (
+    return useEnhanced ? (
+      <EnhancedBiomarkersView
+        score={selectedScore}
+        component={selectedComponent}
+        onBackToComponents={handleBackToComponents}
+        onBackToDashboard={handleBackToDashboard}
+      />
+    ) : (
       <BiomarkersView
         score={selectedScore}
         component={selectedComponent}
@@ -47,7 +59,13 @@ function App() {
   }
 
   if (currentView === 'components' && selectedScore) {
-    return (
+    return useEnhanced ? (
+      <EnhancedComponentsView
+        score={selectedScore}
+        onComponentClick={handleComponentClick}
+        onBackToDashboard={handleBackToDashboard}
+      />
+    ) : (
       <ComponentsView
         score={selectedScore}
         onComponentClick={handleComponentClick}
@@ -55,9 +73,6 @@ function App() {
       />
     );
   }
-
-  // Use enhanced dashboard with micro-interactions
-  const useEnhanced = true; // Toggle this to switch between dashboards
   
   return useEnhanced ? (
     <EnhancedDashboard 
