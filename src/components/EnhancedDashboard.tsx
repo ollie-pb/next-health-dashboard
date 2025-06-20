@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import type { HealthScore } from '../types';
+import type { HealthScore, Component } from '../types';
 import { AnimatedScoreCard } from '../design-system/molecules/AnimatedScoreCard';
 import { DashboardLayout } from '../design-system/layouts/DashboardLayout';
 import { Grid, GridItem } from '../design-system/layouts/Grid';
@@ -12,18 +12,20 @@ import { Loading } from '../design-system/atoms/Loading';
 import { Chart } from '../design-system/molecules/Chart';
 import { Navigation } from '../design-system/molecules/Navigation';
 import { HealthWheelVisualization } from './HealthWheelVisualization';
+import { AttentionDashboard } from './AttentionDashboard';
 import { TimeIntervalSelector, type TimeInterval } from '../design-system/molecules/TimeIntervalSelector';
 import { cn } from '../design-system/utils/cn';
 
 interface EnhancedDashboardProps {
   scores: HealthScore[];
   onScoreClick?: (score: HealthScore) => void;
+  onComponentClick?: (component: Component) => void;
 }
 
-export const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ scores, onScoreClick }) => {
+export const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ scores, onScoreClick, onComponentClick }) => {
   const [loading, setLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeView, setActiveView] = useState('grid');
+  const [activeView, setActiveView] = useState('wheel');
   const [selectedTimeInterval, setSelectedTimeInterval] = useState('6m');
 
   useEffect(() => {
@@ -50,7 +52,6 @@ export const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ scores, on
 
   const viewTabs = [
     { label: 'Grid View', icon: 'menu' as const, active: activeView === 'grid', onClick: () => setActiveView('grid') },
-    { label: 'List View', icon: 'barChart' as const, active: activeView === 'list', onClick: () => setActiveView('list') },
     { label: 'Wheel View', icon: 'heart' as const, active: activeView === 'wheel', onClick: () => setActiveView('wheel') },
   ];
 
@@ -235,68 +236,6 @@ export const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ scores, on
                   </GridItem>
                 ))}
               </Grid>
-            ) : activeView === 'list' ? (
-              <div className="space-y-3">
-                {scores.map((score, index) => (
-                  <div
-                    key={score.id}
-                    className={cn(
-                      'bg-white rounded-lg p-4 border border-neutral-200',
-                      'hover:shadow-card-hover transition-all duration-300 cursor-pointer',
-                      'animate-slide-in-left'
-                    )}
-                    style={{ animationDelay: `${index * 50}ms` }}
-                    onClick={() => onScoreClick?.(score)}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4">
-                        <div className={cn(
-                          'w-12 h-12 rounded-full flex items-center justify-center',
-                          score.status === 'optimal' ? 'bg-optimal-100' :
-                          score.status === 'good' ? 'bg-green-100' :
-                          score.status === 'attention' ? 'bg-attention-100' :
-                          'bg-concern-100'
-                        )}>
-                          <Icon 
-                            name={score.id === 'cardiovascular' ? 'heart' : 
-                                  score.id === 'metabolic' ? 'activity' : 
-                                  score.id === 'inflammation' ? 'pulse' : 'brain'}
-                            size="md"
-                            color={score.status === 'optimal' ? 'success' :
-                                   score.status === 'good' ? 'success' :
-                                   score.status === 'attention' ? 'warning' :
-                                   'danger'}
-                          />
-                        </div>
-                        <div>
-                          <Typography variant="heading-sm">{score.name}</Typography>
-                          <Typography variant="caption" color="muted">
-                            {score.components.length} components • Updated {score.lastUpdate}
-                          </Typography>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <Typography variant="heading-lg" className="font-bold">
-                          {score.value}
-                        </Typography>
-                        {score.trend !== 0 && (
-                          <Badge 
-                            variant={score.trend > 0 ? 'success' : 'danger'} 
-                            size="sm"
-                          >
-                            <Icon 
-                              name={score.trend > 0 ? 'trendingUp' : 'trendingDown'} 
-                              size="xs" 
-                            />
-                            {Math.abs(score.trend)}%
-                          </Badge>
-                        )}
-                        <Icon name="chevronRight" size="sm" color="muted" />
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
             ) : (
               <div className="flex justify-center">
                 <HealthWheelVisualization 
@@ -338,6 +277,13 @@ export const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ scores, on
               showLegend
             />
           </Section>
+
+          {/* Attention Dashboard */}
+          <AttentionDashboard 
+            scores={scores}
+            onScoreClick={onScoreClick}
+            onComponentClick={onComponentClick}
+          />
 
           {/* Live Monitoring Banner */}
           <div className={cn(
