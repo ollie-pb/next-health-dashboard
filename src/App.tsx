@@ -78,6 +78,7 @@ function App() {
     <EnhancedDashboard 
       scores={sampleHealthScores} 
       onScoreClick={handleScoreClick}
+      onComponentClick={handleComponentClick}
     />
   ) : (
     <Dashboard 
