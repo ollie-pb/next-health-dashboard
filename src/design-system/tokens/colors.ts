@@ -2,16 +2,16 @@
 // Sophisticated color palette inspired by Next Health's brand aesthetic
 
 export const colors = {
-  // Primary Brand Colors - Sophisticated Blues
+  // Primary Brand Colors - Next Health Sophisticated Blues
   primary: {
     50: '#f0f4f8',
     100: '#d9e6f2', 
     200: '#b8d0e8',
     300: '#91b4db',
     400: '#6b94cc',
-    500: '#4a74b8',   // Primary brand blue
+    500: '#4a74b8',   // Next Health primary blue
     600: '#3d5a94',
-    700: '#314570',
+    700: '#314570',   // Darker blue for gradients
     800: '#25324c',
     900: '#1a1f28',
   },

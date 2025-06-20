@@ -9,3 +9,6 @@ export type { ChartProps, DataPoint } from './Chart';
 
 export { Navigation, navigationVariants } from './Navigation';
 export type { NavigationProps, NavigationItem } from './Navigation';
+
+export { TimeIntervalSelector } from './TimeIntervalSelector';
+export type { TimeInterval } from './TimeIntervalSelector';

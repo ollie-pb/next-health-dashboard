@@ -11,6 +11,8 @@ import { Icon } from '../design-system/atoms/Icon';
 import { Loading } from '../design-system/atoms/Loading';
 import { Chart } from '../design-system/molecules/Chart';
 import { Navigation } from '../design-system/molecules/Navigation';
+import { HealthWheelVisualization } from './HealthWheelVisualization';
+import { TimeIntervalSelector, type TimeInterval } from '../design-system/molecules/TimeIntervalSelector';
 import { cn } from '../design-system/utils/cn';
 
 interface EnhancedDashboardProps {
@@ -22,6 +24,7 @@ export const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ scores, on
   const [loading, setLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeView, setActiveView] = useState('grid');
+  const [selectedTimeInterval, setSelectedTimeInterval] = useState('6m');
 
   useEffect(() => {
     // Simulate initial loading
@@ -48,6 +51,18 @@ export const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ scores, on
   const viewTabs = [
     { label: 'Grid View', icon: 'menu' as const, active: activeView === 'grid', onClick: () => setActiveView('grid') },
     { label: 'List View', icon: 'barChart' as const, active: activeView === 'list', onClick: () => setActiveView('list') },
+    { label: 'Wheel View', icon: 'heart' as const, active: activeView === 'wheel', onClick: () => setActiveView('wheel') },
+  ];
+
+  // Time interval options
+  const timeIntervals: TimeInterval[] = [
+    { label: '1M', value: '1m', months: 1 },
+    { label: '3M', value: '3m', months: 3 },
+    { label: '6M', value: '6m', months: 6 },
+    { label: '12M', value: '12m', months: 12 },
+    { label: '18M', value: '18m', months: 18 },
+    { label: '3Y', value: '3y', months: 36 },
+    { label: 'All', value: 'all', months: undefined },
   ];
 
   // Calculate statistics
@@ -62,14 +77,62 @@ export const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ scores, on
     scores.reduce((acc, score) => acc + score.value, 0) / scores.length
   );
 
-  const chartData = [
-    { label: 'Jan', value: 72, status: 'good' as const },
-    { label: 'Feb', value: 75, status: 'good' as const },
-    { label: 'Mar', value: 78, status: 'good' as const },
-    { label: 'Apr', value: 82, status: 'optimal' as const },
-    { label: 'May', value: 85, status: 'optimal' as const },
-    { label: 'Jun', value: overallScore, status: overallScore >= 80 ? 'optimal' as const : 'good' as const },
-  ];
+  // Generate chart data based on selected time interval
+  const generateChartData = () => {
+    const interval = timeIntervals.find(t => t.value === selectedTimeInterval);
+    const months = interval?.months || 120; // Default to 10 years for "All"
+    
+    // This is sample data - in real app, would fetch based on time range
+    const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const data = [];
+    
+    if (months <= 6) {
+      // For short intervals, show monthly data
+      for (let i = months; i > 0; i--) {
+        const value = Math.round(overallScore - (i * 2) + Math.random() * 10);
+        data.push({
+          label: monthLabels[(12 - i) % 12],
+          value: Math.max(50, Math.min(100, value)),
+          status: value >= 80 ? 'optimal' as const : value >= 60 ? 'good' as const : 'attention' as const
+        });
+      }
+    } else if (months <= 18) {
+      // For medium intervals, show bi-monthly data
+      for (let i = 0; i < months; i += 2) {
+        const value = Math.round(overallScore - ((months - i) * 1.5) + Math.random() * 10);
+        data.push({
+          label: monthLabels[i % 12],
+          value: Math.max(50, Math.min(100, value)),
+          status: value >= 80 ? 'optimal' as const : value >= 60 ? 'good' as const : 'attention' as const
+        });
+      }
+    } else {
+      // For long intervals, show quarterly data
+      const quarters = ['Q1', 'Q2', 'Q3', 'Q4'];
+      const yearsToShow = Math.min(Math.ceil(months / 12), 5);
+      for (let year = yearsToShow; year > 0; year--) {
+        for (let q = 0; q < 4; q++) {
+          const value = Math.round(overallScore - (year * 3) + (q * 2) + Math.random() * 10);
+          data.push({
+            label: year === 1 ? quarters[q] : `${quarters[q]}'${24 - year}`,
+            value: Math.max(50, Math.min(100, value)),
+            status: value >= 80 ? 'optimal' as const : value >= 60 ? 'good' as const : 'attention' as const
+          });
+        }
+      }
+    }
+    
+    // Add current value as the last point
+    data.push({
+      label: 'Now',
+      value: overallScore,
+      status: overallScore >= 80 ? 'optimal' as const : overallScore >= 60 ? 'good' as const : 'attention' as const
+    });
+    
+    return data;
+  };
+
+  const chartData = generateChartData();
 
   return (
     <DashboardLayout
@@ -140,7 +203,7 @@ export const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ scores, on
             ))}
           </div>
 
-          {/* Main Content */}
+          {/* Health Scores Section */}
           <Section
             title="Health Scores"
             description="Click on any score to view detailed components and biomarkers"
@@ -151,7 +214,7 @@ export const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ scores, on
             }
           >
             {activeView === 'grid' ? (
-              <Grid columns={4} gap={6}>
+              <Grid columns={3} gap={4}>
                 {scores.map((score, index) => (
                   <GridItem key={score.id}>
                     <AnimatedScoreCard
@@ -172,7 +235,7 @@ export const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ scores, on
                   </GridItem>
                 ))}
               </Grid>
-            ) : (
+            ) : activeView === 'list' ? (
               <div className="space-y-3">
                 {scores.map((score, index) => (
                   <div
@@ -234,15 +297,32 @@ export const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ scores, on
                   </div>
                 ))}
               </div>
+            ) : (
+              <div className="flex justify-center">
+                <HealthWheelVisualization 
+                  scores={scores}
+                  onScoreClick={onScoreClick}
+                  className="max-w-lg"
+                />
+              </div>
             )}
           </Section>
+
 
           {/* Trend Chart */}
           <Section
             title="Overall Health Trend"
-            subtitle="6-month progression"
+            subtitle={`${timeIntervals.find(t => t.value === selectedTimeInterval)?.label || '6M'} progression`}
             icon="trendingUp"
             variant="card"
+            action={
+              <TimeIntervalSelector
+                intervals={timeIntervals}
+                selected={selectedTimeInterval}
+                onChange={setSelectedTimeInterval}
+                size="sm"
+              />
+            }
           >
             <Chart
               title="Average Health Score"
@@ -250,7 +330,10 @@ export const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ scores, on
               variant="line"
               size="lg"
               unit=" points"
-              trend={((overallScore - 72) / 72 * 100)}
+              trend={chartData.length >= 2 ? 
+                ((chartData[chartData.length - 1].value - chartData[0].value) / chartData[0].value * 100) : 
+                0
+              }
               showGrid
               showLegend
             />
